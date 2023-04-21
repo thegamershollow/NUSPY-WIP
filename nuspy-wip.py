@@ -1,4 +1,11 @@
-import struct, base64, binascii, sys, urllib.error, urllib.request, zlib, pathlib
+import struct, base64, binascii, sys, urllib.error, urllib.request, zlib, pathlib, requests
+
+# Calles the title id/key library
+lib = 'https://raw.githubusercontent.com/thegamershollow/NUSPY-Lib/main/lib'
+tLib = requests.get(lib)
+lib = tLib.text
+
+
 
 
 ## Set up graceful script exiting ##
@@ -77,10 +84,9 @@ def generate_ticket(title_id, title_key, title_version, fulloutputpath, patch_de
 # Main function, most stuff branches off from here
 def main(title_id: str, title_key: str, version: str = None):
     if len(title_id) != 16 or len(title_key) != 32:
-        print('Title ID or Title Key is invalid length. Expected length: 16 or 32.')
-        print(f'usage: {sys.argv[0]} <titleid> <titlekey>')
+        print('Title ID is invalid length. Expected length: 16 or 32.')
+        print(f'usage: {sys.argv[0]} <titleid>')
         print('Latest version is downloaded, if no version is specified.')
-        print('If you do not know where to get the title id/title key of a game go to http://thegamershollow.github.io/wiiu-tdb/')
         print('This tool is for software archival purposes only, thegamershollow does not condone piracy of any kind as it is illigal.')
         sys.exit(1)
 
@@ -192,13 +198,13 @@ def download(url: str, message: str, message_suffix: str = '') -> bytes:
 
 if __name__ == '__main__':
     if len(sys.argv) == 1:
-        print(f'usage: {sys.argv[0]} <titleid> <titlekey>')
+        print(f'usage: {sys.argv[0]} <titleid>')
         print('Latest version is downloaded, if no version is specified.')
         sys.exit(1)
     try:
-        main(title_id=sys.argv[1].upper(), title_key=sys.argv[2].upper(), version=sys.argv[3] if len(sys.argv) > 3 else None)
+        main(title_id=sys.argv[1].upper(), version=sys.argv[2] if len(sys.argv) > 2 else None)
     except IndexError:
         print('Invalid number of arguments')
-        print(f'usage: {sys.argv[0]} <titleid> <titlekey>')
+        print(f'usage: {sys.argv[0]} <titleid>')
         print('Latest version is downloaded, if no version is specified.')
         sys.exit(1)
